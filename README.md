@@ -1,6 +1,8 @@
-# Flappy Piggy 🐷
+# Flappy Piggy 
 
 Un clon del clásico juego Flappy Bird con temática de cerdito, desarrollado en Rust utilizando el motor de juegos Bevy.
+
+![image](https://github.com/user-attachments/assets/36685950-462f-4205-b354-42f675084330)
 
 
 
@@ -27,8 +29,8 @@ Flappy Piggy es una implementación del clásico juego Flappy Bird, donde el jug
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/flappy-piggy.git
-   cd flappy-piggy
+   git clone
+   cd flappy-rust
    ```
 
 2. Compila y ejecuta el juego:
@@ -90,7 +92,8 @@ Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para más deta
 
 - Inspirado en el juego original Flappy Bird de Dong Nguyen
 - Desarrollado con el framework [Bevy](https://bevyengine.org/)
-- Assets gráficos y de sonido de [fuente]
+- Assets gráficos y de sonido de una pagina y yo
+- mis condolencias por mi espalda
 
 ---
 
