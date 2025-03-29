@@ -13,6 +13,9 @@ use crate::constants::WINDOW_WIDTH;
 use crate::components::ScoreText;
 
 
+// por ahora no me duele masss, soy solo otra luz en la ciudad 
+
+//------------------------------------------------------------------------------------------------
 pub fn blink_space_bar_text(
     time: Res<Time>,
     mut query: Query<(&mut PressSpaceBarText, &mut Visibility)>,
@@ -32,6 +35,7 @@ pub fn blink_space_bar_text(
 
 }
 
+//------------------------------------------------------------------------------------------------
 //mover el fondo
 pub fn move_background(time: Res<Time>, mut query: Query<&mut Transform, With<Background>>) {
     let mut background_transform = query.single_mut();
@@ -46,6 +50,7 @@ pub fn move_background(time: Res<Time>, mut query: Query<&mut Transform, With<Ba
     }
 }
 
+//------------------------------------------------------------------------------------------------
 //mover el suelo
 pub fn move_ground(time: Res<Time>, mut query: Query<&mut Transform, With<Ground>>) {
     let mut ground_transform = query.single_mut();
@@ -60,7 +65,8 @@ pub fn move_ground(time: Res<Time>, mut query: Query<&mut Transform, With<Ground
     }
 }
 
-// vamos a animar al pajarito que se pajea pipipi
+//------------------------------------------------------------------------------------------------
+// vamos a animar al cerdito que se pajea pipipi
 pub fn animate_bird(time: Res<Time>, mut query: Query<(&mut Bird, &mut TextureAtlas)>) {
     for (mut bird, mut texture_atlas) in query.iter_mut() {
         let delta = time.delta();
@@ -77,6 +83,7 @@ pub fn animate_bird(time: Res<Time>, mut query: Query<(&mut Bird, &mut TextureAt
     }
 }
 
+//------------------------------------------------------------------------------------------------
 //para empezar el juego
 pub fn start_game(
     mut game: ResMut<Game>,
@@ -135,6 +142,7 @@ pub fn start_game(
     }
 }
 
+//------------------------------------------------------------------------------------------------
 //gravedad dkfndnf
 pub fn gravity(
     time: Res<Time>,
@@ -184,6 +192,7 @@ pub fn gravity(
     }
 }
 
+//------------------------------------------------------------------------------------------------
 //para saltar 
 pub fn jump(
     mut query: Query<&mut Bird>,
@@ -206,6 +215,7 @@ pub fn jump(
     }
 }
 
+//------------------------------------------------------------------------------------------------
 //para mover los tubos
 pub fn pipes(
     time: Res<Time>,
@@ -261,33 +271,33 @@ pub fn pipes(
         let pipe_y = pipe_transform.translation.y;
         let pipe_width = 52.0;
         let pipe_height = 320.0;
- 
+
         let collision_x = bird_x + bird_width / 2.0 > pipe_x - pipe_width / 2.0
             && bird_x - bird_width / 2.0 < pipe_x + pipe_width / 2.0;
         let collision_y = bird_y + bird_height / 2.0 > pipe_y - pipe_height / 2.0
             && bird_y - bird_height / 2.0 < pipe_y + pipe_height / 2.0;
- 
+
         collision_x && collision_y
     };
- 
+
     for bird_transform in bird_query.iter_mut() {
         let mut game_over = || {
             game.state = GameState::GameOver;
             *game_over_query.single_mut() = Visibility::Visible;
- 
-            // Play game over sound
+
+            // El sonido de game over
             commands.spawn(AudioBundle {
                 source: asset_server.load("audio/hit.ogg"),
                 settings: PlaybackSettings::DESPAWN,
             });
         };
- 
+
         for (_, transform) in upper_pipe_query.iter_mut() {
             if is_collision(bird_transform, &transform) {
                 game_over();
             }
         }
- 
+
         for (_, transform) in lower_pipe_query.iter_mut() {
             if is_collision(bird_transform, &transform) {
                 game_over();
@@ -295,6 +305,9 @@ pub fn pipes(
         }
     }
 }
+
+//------------------------------------------------------------------------------------------------
+//para el puntaje
 pub fn score(
     mut game: ResMut<Game>,
     bird_query: Query<(&Bird, &Transform)>,
@@ -306,28 +319,31 @@ pub fn score(
         for (mut upper_pipe, transform) in upper_pipe_query.iter_mut() {
             let passed = transform.translation.x < bird_transform.translation.x;
             let passed_state = upper_pipe.passed;
- 
+
             if passed && !passed_state {
                 game.score += 1;
                 upper_pipe.passed = true;
- 
+
                 commands.spawn(AudioBundle {
                     source: asset_server.load("audio/point.ogg"),
                     settings: PlaybackSettings::DESPAWN,
                 });
- 
+
                 println!("Score: {}", game.score);
             }
         }
     }
 }
+
+//------------------------------------------------------------------------------------------------
+//para renderizar el puntaje
 pub fn render_score(game: Res<Game>, mut query: Query<&mut TextureAtlas, With<ScoreText>>) {
     let score_string = format!("{:03}", game.score); // Ensure at least 3 digits, pad with zeros
     let score_digits: Vec<usize> = score_string
         .chars()
         .map(|c| c.to_digit(10).unwrap() as usize)
         .collect();
- 
+
     for (digit, mut texture_atlas) in score_digits.iter().zip(query.iter_mut()) {
         texture_atlas.index = *digit;
     }
