@@ -27,6 +27,7 @@ fn main() {
         .add_systems(Update, jump.run_if(is_game_active))
         .add_systems(Update, pipes.run_if(is_game_active))
         .add_systems(Update, score.run_if(is_game_active))
+        .add_systems(Update, render_score.run_if(is_game_active))
         .add_plugins(MyPlugin)
         .run();
 }

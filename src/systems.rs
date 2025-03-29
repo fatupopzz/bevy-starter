@@ -85,10 +85,7 @@ pub fn start_game(
     mut bird_query: Query<(&mut Bird, &mut Transform)>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut upper_pipe_query: Query<(&mut Transform, &mut UpperPipe), (With<UpperPipe>, Without<Bird>)>,
-    mut lower_pipe_query: Query<
-        &mut Transform,
-        (With<LowerPipe>, Without<Bird>, Without<UpperPipe>),
-    >,
+    mut lower_pipe_query: Query<&mut Transform, (With<LowerPipe>, Without<Bird>, Without<UpperPipe>)>,
 ) {
     if !keyboard_input.just_pressed(KeyCode::Space) {
         return;
@@ -109,6 +106,9 @@ pub fn start_game(
             transform.translation.x = 0.;
             transform.translation.x += delta_x;
         }
+
+        // Reiniciar el puntaje
+        game.score = 0;
     };
 
     for (mut bird, mut transform) in bird_query.iter_mut() {
@@ -125,6 +125,14 @@ pub fn start_game(
     // Hiding the GameOverText
     let mut game_over_visibility = game_over_query.single_mut();
     *game_over_visibility = Visibility::Hidden;
+    
+    // Actualizar el estado del juego a Active
+    game.state = GameState::Active;
+    
+    // Reiniciar el puntaje si es necesario (opcional)
+    if game.state == GameState::GameOver {
+        game.score = 0;
+    }
 }
 
 //gravedad dkfndnf
@@ -194,7 +202,7 @@ pub fn jump(
     });
 
     for mut bird in query.iter_mut() {
-        bird.velocity = 400.0;
+        bird.velocity = 350.0;
     }
 }
 
@@ -323,4 +331,5 @@ pub fn render_score(game: Res<Game>, mut query: Query<&mut TextureAtlas, With<Sc
     for (digit, mut texture_atlas) in score_digits.iter().zip(query.iter_mut()) {
         texture_atlas.index = *digit;
     }
+
 }
