@@ -97,4 +97,4 @@ Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para más deta
 
 ---
 
-Desarrollado con ❤️, 🦀 (Rust) y 🐷 (Piggy Power!)
+Desarrollado con RUST y los quiero mucho
